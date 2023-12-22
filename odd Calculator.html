@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculate Investment Amount</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background-color: #f8f8f8;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 80%;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 12px;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .result-item {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+
+    .level {
+      background-color: #4caf50;
+      color: white;
+      padding: 8px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+
+    }
+
+    .level2 {
+      background-color: #45a049;
+      color: white;
+      padding: 8px;
+      border-radius: 5px;
+    }
+
+    .damage {
+      color: yellow;
+      font-weight: bolder;
+      font-size: 15px;
+    }
+
+    .money {
+      color: #f2ffb1;
+      font-weight: bolder;
+      font-size: 15px;
+    }
+
+    .accordion {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      transition: 0.4s;
+      overflow: hidden;
+      width: 80%;
+    }
+
+    .accordion.active {
+      background-color: #ccc;
+    }
+
+    .accordion:hover {
+      background-color: #ccc;
+    }
+
+    .panel {
+      padding: 0 18px;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.4s ease-out;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Calculate Investment Amount</h2>
+
+  <label for="y">Enter odd</label>
+  <input type="number" value="1.7" id="y">
+
+  <label for="z">Enter damage</label>
+  <input type="number" value="10" id="z">
+
+  <label for="p">Enter profit</label>
+  <input type="number" value="0" id="p">
+  <br />
+
+  <button onclick="calculate()">Calculate</button>
+  <button onclick="clearResult()">Clear History</button>
+
+  <script>
+    function calculate() {
+      var container = document.createElement('div');
+      container.classList.add('result');
+
+      var accordionButton = document.createElement('button');
+      accordionButton.classList.add('accordion');
+      accordionButton.textContent = 'Calculation';
+
+      var panel = document.createElement('div');
+      panel.classList.add('panel');
+      panel.id = 'resultPanel';
+
+      container.appendChild(accordionButton);
+      container.appendChild(panel);
+
+      document.body.appendChild(container);
+
+      accordionButton.addEventListener('click', function () {
+        this.classList.toggle('active');
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
+      });
+
+      panel.innerHTML = '';
+      var y = parseFloat(document.getElementById('y').value);
+      var z = parseFloat(document.getElementById('z').value);
+      var p = parseFloat(document.getElementById('p').value);
+
+      let damage = z === 0 ? 1 : z;
+      let lastAmount = 0;
+
+      for (let index = 0; index <= 7; index++) {
+        var next = Math.ceil((z + lastAmount) / (y - 1)) + Math.ceil(p / (y - 1));
+        damage += next;
+
+        var resultItem = document.createElement('div');
+        resultItem.classList.add('result-item');
+        resultItem.innerHTML += '<div class="level">Level: ' + (index + 1) + ": " + '  <span class="money">' + next.toLocaleString() + '</span>' + '</div>' + '<div class="level2"> ' + ' Damage if lose: <span class="damage">' + damage.toLocaleString() + '</span>' + '</div>';
+
+        panel.appendChild(resultItem);
+
+        lastAmount += next;
+      }
+    }
+
+    function clearResult() {
+      var resultContainers = document.querySelectorAll('.result');
+      resultContainers.forEach(function (container) {
+        container.remove();
+      });
+    }
+  </script>
+
+</body>
+
+</html>
